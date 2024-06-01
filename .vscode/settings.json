@@ -1,0 +1,20 @@
+{
+    "sqltools.connections": [
+        {
+            "mysqlOptions": {
+                "authProtocol": "default",
+                "enableSsl": "Disabled"
+            },
+            "previewLimit": 50,
+            "server": "localhost",
+            "port": 3301,
+            "driver": "MySQL",
+            "name": "sakilaDB",
+            "database": "sakila",
+            "username": "sakila",
+            "connectionTimeout": 1000,
+            "password": "p_ssW0rd"
+        }
+    ],
+    "java.configuration.updateBuildConfiguration": "interactive"
+}

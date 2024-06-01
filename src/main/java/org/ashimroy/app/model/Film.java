@@ -1,4 +1,4 @@
-package org.freecodecamp.app.model;
+package org.ashimroy.app.model;
 
 import jakarta.persistence.*;
 
@@ -8,25 +8,35 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+// The @Entity annotation specifies that the class is an entity and is mapped to a database table.
 @Entity
+// The @Table annotation specifies the name of the database table to be used for mapping.
 @Table(name = "film", schema = "sakila")
 public class Film {
     
+    // Default constructor
     public Film() {}
     
+    // Constructor with parameters
     public Film(short filmId, String title, short length) {
         this.filmId = filmId; 
         this.title = title; 
         this.length = length;
     }
     
+    // The @Id annotation specifies the primary key of an entity.
+    // The @GeneratedValue annotation provides for the specification of generation strategies for the values of primary keys.
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     @Column(name = "film_id")
     private short filmId;
+    
+    // The @Basic annotation is a marker annotation, it can be applied to a persistent property or instance variable of any of the following types: Java primitive types, wrappers of the primitive types, String, java.math.BigInteger, java.math.BigDecimal, java.util.Date, java.util.Calendar, java.sql.Date, java.sql.Time, java.sql.Timestamp, byte[], Byte[], char[], Character[], enums, and any other type that implements Serializable.
     @Basic
     @Column(name = "title")
     private String title;
+
+    // The @Basic annotation is used to specify the mapping of a basic attribute.
     @Basic
     @Column(name = "description")
     private String description;
@@ -49,7 +59,7 @@ public class Film {
     @Column(name = "replacement_cost")
     private BigDecimal replacementCost;
     @Basic
-    @Column(name = "rating", columnDefinition = "enum('G', 'PG', 'PG-13', 'R', 'NC-17')")
+    @Column(name = "rating", columnDefinition = "enum('G', 'PG', 'PG-13', 'R', 'NC-17')") // rating has enum values in the database
     private String rating;
     @Basic
     @Column(name = "special_features", columnDefinition = "set('Trailers', 'Commentaries', 'Deleted Scenes', 'Behind the Scenes')")
@@ -57,6 +67,10 @@ public class Film {
     @Basic
     @Column(name = "last_update")
     private Timestamp lastUpdate;
+
+    //film_actor is join table..
+    // The @ManyToMany annotation is used in both sides of many-to-many relationship.
+    // In this case, it's used in the relationship between Film and Actor entities.
     @ManyToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
     @JoinTable(
             name = "film_actor",
@@ -64,6 +78,7 @@ public class Film {
             inverseJoinColumns = { @JoinColumn(name = "actor_id") }
     )
     private List<Actor> actors = new ArrayList<>();
+
 
     public short getFilmId() {
         return filmId;
@@ -161,23 +176,29 @@ public class Film {
         this.lastUpdate = lastUpdate;
     }
 
+    // Overriding equals method for Film class
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Film film = (Film) o;
+        if (this == o) return true; // if both are same object
+        if (o == null || getClass() != o.getClass()) return false; // if object is null or different class
+        Film film = (Film) o; // typecast object to Film
+        // compare all fields
         return filmId == film.filmId && languageId == film.languageId && rentalDuration == film.rentalDuration && Objects.equals(title, film.title) && Objects.equals(description, film.description) && Objects.equals(originalLanguageId, film.originalLanguageId) && Objects.equals(rentalRate, film.rentalRate) && Objects.equals(length, film.length) && Objects.equals(replacementCost, film.replacementCost) && Objects.equals(rating, film.rating) && Objects.equals(specialFeatures, film.specialFeatures) && Objects.equals(lastUpdate, film.lastUpdate);
     }
 
+    // Overriding hashCode method for Film class
     @Override
     public int hashCode() {
+        // generate hashcode based on all fields
         return Objects.hash(filmId, title, description, languageId, originalLanguageId, rentalDuration, rentalRate, length, replacementCost, rating, specialFeatures, lastUpdate);
     }
 
+    // Getter for actors field
     public List<Actor> getActors() {
         return actors;
     }
 
+    // Setter for actors field
     public void setActors(List<Actor> actors) {
         this.actors = actors;
     }

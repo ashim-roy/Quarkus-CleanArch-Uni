@@ -1,7 +1,8 @@
 import io.quarkus.test.junit.QuarkusTest;
 import jakarta.inject.Inject;
-import org.freecodecamp.app.model.Film;
-import org.freecodecamp.app.repository.FilmRepository;
+
+import org.ashimroy.app.model.Film;
+import org.ashimroy.app.repository.FilmRepository;
 import org.junit.jupiter.api.Test;
 
 import java.util.Optional;
