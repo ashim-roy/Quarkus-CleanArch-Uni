@@ -9,9 +9,6 @@ import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.List;
 
-import org.ashimroy.app.model.Actor;
-import org.ashimroy.app.model.Film;
-
 /**
  * The generated base for entity {@link Film} representing entities of the
  * {@code film}-table in the database.
@@ -31,39 +28,12 @@ public final class Film$ {
         false
     );
     /**
-     * This Field corresponds to the {@link Film} field "filmId".
+     * This Field corresponds to the {@link Film} field "rentalDuration".
      */
-    public static final ShortField<Film> filmId = ShortField.create(
+    public static final ShortField<Film> rentalDuration = ShortField.create(
         Film.class,
-        "filmId",
-        Film::getFilmId,
-        false
-    );
-    /**
-     * This Field corresponds to the {@link Film} field "languageId".
-     */
-    public static final ShortField<Film> languageId = ShortField.create(
-        Film.class,
-        "languageId",
-        Film::getLanguageId,
-        false
-    );
-    /**
-     * This Field corresponds to the {@link Film} field "length".
-     */
-    public static final ComparableField<Film, Short> length = ComparableField.create(
-        Film.class,
-        "length",
-        Film::getLength,
-        false
-    );
-    /**
-     * This Field corresponds to the {@link Film} field "originalLanguageId".
-     */
-    public static final ComparableField<Film, Short> originalLanguageId = ComparableField.create(
-        Film.class,
-        "originalLanguageId",
-        Film::getOriginalLanguageId,
+        "rentalDuration",
+        Film::getRentalDuration,
         false
     );
     /**
@@ -73,6 +43,33 @@ public final class Film$ {
         Film.class,
         "rentalRate",
         Film::getRentalRate,
+        false
+    );
+    /**
+     * This Field corresponds to the {@link Film} field "rating".
+     */
+    public static final StringField<Film> rating = StringField.create(
+        Film.class,
+        "rating",
+        Film::getRating,
+        false
+    );
+    /**
+     * This Field corresponds to the {@link Film} field "actors".
+     */
+    public static final ReferenceField<Film, List<Actor>> actors = ReferenceField.create(
+        Film.class,
+        "actors",
+        Film::getActors,
+        false
+    );
+    /**
+     * This Field corresponds to the {@link Film} field "description".
+     */
+    public static final StringField<Film> description = StringField.create(
+        Film.class,
+        "description",
+        Film::getDescription,
         false
     );
     /**
@@ -94,30 +91,12 @@ public final class Film$ {
         false
     );
     /**
-     * This Field corresponds to the {@link Film} field "description".
+     * This Field corresponds to the {@link Film} field "languageId".
      */
-    public static final StringField<Film> description = StringField.create(
+    public static final ShortField<Film> languageId = ShortField.create(
         Film.class,
-        "description",
-        Film::getDescription,
-        false
-    );
-    /**
-     * This Field corresponds to the {@link Film} field "rating".
-     */
-    public static final StringField<Film> rating = StringField.create(
-        Film.class,
-        "rating",
-        Film::getRating,
-        false
-    );
-    /**
-     * This Field corresponds to the {@link Film} field "rentalDuration".
-     */
-    public static final ShortField<Film> rentalDuration = ShortField.create(
-        Film.class,
-        "rentalDuration",
-        Film::getRentalDuration,
+        "languageId",
+        Film::getLanguageId,
         false
     );
     /**
@@ -130,12 +109,30 @@ public final class Film$ {
         false
     );
     /**
-     * This Field corresponds to the {@link Film} field "actors".
+     * This Field corresponds to the {@link Film} field "length".
      */
-    public static final ReferenceField<Film, List<Actor>> actors = ReferenceField.create(
+    public static final ComparableField<Film, Short> length = ComparableField.create(
         Film.class,
-        "actors",
-        Film::getActors,
+        "length",
+        Film::getLength,
+        false
+    );
+    /**
+     * This Field corresponds to the {@link Film} field "originalLanguageId".
+     */
+    public static final ComparableField<Film, Short> originalLanguageId = ComparableField.create(
+        Film.class,
+        "originalLanguageId",
+        Film::getOriginalLanguageId,
+        false
+    );
+    /**
+     * This Field corresponds to the {@link Film} field "filmId".
+     */
+    public static final ShortField<Film> filmId = ShortField.create(
+        Film.class,
+        "filmId",
+        Film::getFilmId,
         false
     );
 }

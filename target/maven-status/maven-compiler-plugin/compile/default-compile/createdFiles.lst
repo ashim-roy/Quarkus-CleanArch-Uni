@@ -1,7 +1,8 @@
-org\freecodecamp\app\FilmResource.class
-org\freecodecamp\app\model\Actor.class
-org\freecodecamp\app\model\Actor$.class
-org\freecodecamp\app\model\Film.class
-org\freecodecamp\app\repository\FilmRepository.class
+org\ashimroy\app\model\Film.class
+org\ashimroy\app\model\Actor$.class
+org\ashimroy\app\model\Film$.class
 META-INF\panache-archive.marker
-org\freecodecamp\app\model\Film$.class
+org\ashimroy\app\controller\FilmController.class
+org\ashimroy\app\model\Actor.class
+org\ashimroy\app\MyMainApp.class
+org\ashimroy\app\repository\FilmRepository.class

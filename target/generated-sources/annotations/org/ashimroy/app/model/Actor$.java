@@ -19,12 +19,21 @@ import java.util.Set;
 public final class Actor$ {
     
     /**
-     * This Field corresponds to the {@link Actor} field "firstName".
+     * This Field corresponds to the {@link Actor} field "actorId".
      */
-    public static final StringField<Actor> firstName = StringField.create(
+    public static final ShortField<Actor> actorId = ShortField.create(
         Actor.class,
-        "firstName",
-        actor -> {throw new IllegalJavaBeanException(Actor.class, "firstName");},
+        "actorId",
+        actor -> {throw new IllegalJavaBeanException(Actor.class, "actorId");},
+        false
+    );
+    /**
+     * This Field corresponds to the {@link Actor} field "lastUpdate".
+     */
+    public static final ComparableField<Actor, Timestamp> lastUpdate = ComparableField.create(
+        Actor.class,
+        "lastUpdate",
+        actor -> {throw new IllegalJavaBeanException(Actor.class, "lastUpdate");},
         false
     );
     /**
@@ -46,21 +55,12 @@ public final class Actor$ {
         false
     );
     /**
-     * This Field corresponds to the {@link Actor} field "lastUpdate".
+     * This Field corresponds to the {@link Actor} field "firstName".
      */
-    public static final ComparableField<Actor, Timestamp> lastUpdate = ComparableField.create(
+    public static final StringField<Actor> firstName = StringField.create(
         Actor.class,
-        "lastUpdate",
-        actor -> {throw new IllegalJavaBeanException(Actor.class, "lastUpdate");},
-        false
-    );
-    /**
-     * This Field corresponds to the {@link Actor} field "actorId".
-     */
-    public static final ShortField<Actor> actorId = ShortField.create(
-        Actor.class,
-        "actorId",
-        actor -> {throw new IllegalJavaBeanException(Actor.class, "actorId");},
+        "firstName",
+        actor -> {throw new IllegalJavaBeanException(Actor.class, "firstName");},
         false
     );
 }
