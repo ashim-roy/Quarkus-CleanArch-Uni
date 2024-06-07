@@ -1,4 +1,4 @@
-= freeCodeCamp Tutorial - Getting Started with Quarkus and JPAStreamer
+= Getting Started with Quarkus and JPAStreamer
 
 This repository contains the complete source code for the application built in the freeCodeCamp tutorial "Gatting Started with Quarkus and JPAStreamer".
 
@@ -7,8 +7,6 @@ This repository contains the complete source code for the application built in t
 - Docker
 - Sakila database running in a Docker container, see instructions xref:database[here].
 
-== Application overview
-image::application.png[Application overview, width=500px]
 
 [#database]
 == Database
@@ -21,9 +19,7 @@ $ docker run -d --publish 3306:3306 --name mysqld restsql/mysql-sakila
 
 NOTE: This Docker image was built for ARM64 architecture, thus if you are running on e.g. an M1 Mac, you need to instruct Docker to accept images built for a different platform by appending the flag `--platform linux/amd64` after `docker run` in the above command. 
 
-Here is an overview of the relevant part of the schema: 
 
-image::schema.png[Sakila database schema, width=500px]
 
 == Running the application in dev mode
 You can run your application in dev mode that enables live coding using:
@@ -80,11 +76,7 @@ You can then execute your native executable with: `./target/quarkus-tutorial-1.0
 
 If you want to learn more about building native executables, please consult link:https://quarkus.io/guides/maven-tooling[Maven tooling].
 
-== Video Tutorial 
-TODO: Insert link here
 
-== Blog Article
-TODO: Insert link here
 
 == Related Resources
 - link:https://quarkus.io/guides/[Quarkus Guides]
