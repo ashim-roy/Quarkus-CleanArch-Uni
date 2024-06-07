@@ -1,64 +1,37 @@
 package org.ashimroy.app.model;
 
-import jakarta.persistence.*;
+import io.quarkus.hibernate.orm.panache.PanacheEntity;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.Table;
 
 import java.sql.Timestamp;
-import java.util.HashSet;
-import java.util.Objects;
 import java.util.Set;
 
-// Entity annotation indicates that this class is a JPA entity.
 @Entity
-// Table annotation specifies the details of the table that will be used to create the entity in the database.
 @Table(name = "actor", schema = "sakila")
-public class Actor {
-    // These annotations define the primary key for the entity.
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Id
-    @Column(name = "actor_id")
-    private short actorId;
-
-    // Basic annotation is the simplest type of mapping to a database column. Basic means that the attribute is mapped to a single column.
-    @Basic
+public class Actor extends PanacheEntity {
     @Column(name = "first_name")
-    private String firstName;
+    public String firstName;
 
-    @Basic
     @Column(name = "last_name")
-    private String lastName;
+    public String lastName;
 
-    @Basic
     @Column(name = "last_update")
-    private Timestamp lastUpdate;
+    public Timestamp lastUpdate;
 
-    // ManyToMany annotation indicates a many-to-many relationship between the Actor and Film entities.
-    // The mappedBy element indicates that this entity is the inverse of the relationship.
-    @ManyToMany(mappedBy = "actors") // here actors field is mapped by the films field in the Film entity.
-    private Set<Film> films = new HashSet<>();
+    @ManyToMany(mappedBy = "actors")
+    public Set<Film> films;
 
-    // Standard getters and setters for the fields.
-
-    // equals method to compare two Actor objects for equality.
-    @Override
-    public boolean equals(Object o) {  // method for comparing two Actor objects for equality.
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Actor actor = (Actor) o;
-        return actorId == actor.actorId && Objects.equals(firstName, actor.firstName) && Objects.equals(lastName, actor.lastName) && Objects.equals(lastUpdate, actor.lastUpdate);
-    }
-
-    // hashCode method to generate a hash code for the Actor object.
-    @Override
-    public int hashCode() {
-        return Objects.hash(actorId, firstName, lastName, lastUpdate);
-    }
-
-
-    public Set<Film> getFilms() {
-        return films;
-    }
-
-    public void setFilms(Set<Film> films) {
-        this.films = films;
-    }
+    
 }
+
+/*
+ * your Actor class is correctly refactored to use Quarkus Panache. Here are a few things to note:
+PanacheEntity automatically provides an id field, so you no longer need to define actorId.
+Fields are public in Panache entities. This is a conscious design decision to simplify the code.
+You no longer need getters and setters. You can access the fields directly.
+You've correctly used @ManyToMany annotation for the films field.
+You've removed the equals and hashCode methods. If you need to compare Actor entities or use them in a HashSet or HashMap, you might want to add these methods back. Panache doesn't provide a default implementation for these methods.
+ */
