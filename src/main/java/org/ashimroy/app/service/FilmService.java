@@ -1,4 +1,5 @@
 import io.smallrye.mutiny.Uni;
+import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.ws.rs.NotFoundException;
 import io.smallrye.mutiny.infrastructure.Infrastructure;
 import org.ashimroy.app.model.Film;
