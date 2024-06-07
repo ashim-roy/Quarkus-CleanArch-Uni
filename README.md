@@ -1,6 +1,10 @@
+<<<<<<< HEAD
 = Getting Started with Quarkus and JPAStreamer
+=======
+=- Getting Started with Quarkus and JPAStreamer
+>>>>>>> origin/main
 
-This repository contains the complete source code for the application built in the freeCodeCamp tutorial "Gatting Started with Quarkus and JPAStreamer".
+This repository contains the complete source code for the application built in  "Gatting Started with Quarkus and JPAStreamer".
 
 == Prerequisites
 - Java 11 or later
