@@ -1,6 +1,6 @@
 package org.ashimroy.app.model;
 
-import io.quarkus.hibernate.orm.panache.PanacheEntity;
+import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToMany;
@@ -11,7 +11,7 @@ import java.util.Set;
 
 @Entity
 @Table(name = "actor", schema = "sakila")
-public class Actor extends PanacheEntity {
+public class Actor extends PanacheEntityBase {
     @Column(name = "first_name")
     public String firstName;
 

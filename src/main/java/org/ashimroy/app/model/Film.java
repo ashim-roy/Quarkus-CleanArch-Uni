@@ -1,6 +1,6 @@
 package org.ashimroy.app.model;
 
-import io.quarkus.hibernate.orm.panache.PanacheEntity;
+import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -9,6 +9,10 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
+import java.util.Optional;
+import javax.persistence.PersistenceContext;
+import javax.persistence.EntityManager;
+import javax.persistence.Id;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
@@ -16,7 +20,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "film", schema = "sakila")
-public class Film extends PanacheEntity {
+public class Film extends PanacheEntityBase {
     @Column(name = "title", nullable = false)
     public String title;
 
@@ -65,6 +69,12 @@ public class Film extends PanacheEntity {
     
     public Short getLength() {
         return this.length;
+    }
+    @PersistenceContext
+    EntityManager em;
+
+    public Optional<Film> findByIdOptional(Long id) {
+        return Optional.ofNullable(em.find(Film.class, id));
     }
 }
 

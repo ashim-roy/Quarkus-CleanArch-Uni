@@ -6,27 +6,40 @@ import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
-import java.util.stream.Collectors;
+import jakarta.ws.rs.core.Response;
 
-import org.ashimroy.app.service.FilmService;
+import org.ashimroy.app.usecases.GetFilmByIdUseCase;
+import org.ashimroy.app.usecases.GetFilmsStartingWith;
+import org.ashimroy.app.usecases.GetFilmsWithLengthGreaterThan;
+import org.ashimroy.app.usecases.GetPagedFilmsUseCase;
+import org.ashimroy.app.usecases.UpdateRentalRate;
 
-import com.oracle.svm.core.annotate.Inject;
-
+import org.javatuples.Pair;
 import io.smallrye.mutiny.Uni;
+import javax.inject.Inject;
 
-// to use Panache, you don't need a repository class. You can directly use the entity class to perform database operations. Here is how you can modify your FilmController to use Panache:
-// The @Path annotation defines the base URI for the resource class.
-// The @GET annotation defines the HTTP method to handle the request.
 @Path("/")
 public class FilmController {
 
     @Inject
-    FilmService filmService;
+    GetFilmByIdUseCase getFilmByIdUseCase;
+
+    @Inject
+    GetFilmsStartingWith getFilmsStartingWith;
+
+    @Inject
+    GetFilmsWithLengthGreaterThan getFilmsWithLengthGreaterThan;
+
+    @Inject
+    GetPagedFilmsUseCase getPagedFilmsUseCase;
+
+    @Inject
+    UpdateRentalRate updateRentalRate;
 
     // Endpoint to test the service
     @GET
     @Path("/helloAshim")
-    @Produces(MediaType.TEXT_PLAIN)  // The @Produces annotation is used to specify the media type of the response, which in this case is plain text (MediaType.TEXT_PLAIN).
+    @Produces(MediaType.TEXT_PLAIN)
     public String hello() {
         return "Hello Ashim!";
     }
@@ -34,50 +47,65 @@ public class FilmController {
     // Endpoint to get a film by its ID
     @GET
     @Path("/film/{filmId}")
-    @Produces(MediaType.TEXT_PLAIN)
-    public Uni<Object> getFilm(@PathParam("filmId") short filmId) {
-        return filmService.getFilmById(filmId)
-                .onItem().transform(film -> film != null ? film.getTitle() : "No film was found!");
+    @Produces(MediaType.APPLICATION_JSON)
+    public Uni<Response> getFilm(@PathParam("filmId") short filmId) {
+        return getFilmByIdUseCase.execute(filmId)
+                .onItem().transform(film -> {
+                    if (film != null) {
+                        return Response.ok(film).build();
+                    } else {
+                        throw new NotFoundException("No film was found!");
+                    }
+                })
+                .onFailure().recoverWithItem(e -> Response.status(Response.Status.NOT_FOUND).entity(e.getMessage()).build());
     }
 
-    // Endpoint to get a page of films with length greater than the provided minLength, The response is a string with each film's title and length, separated by a newline.
+    // Endpoint to get a page of films with length greater than the provided minLength
     @GET
     @Path("/pagedFilms/{page}/{minLength}")
-    @Produces(MediaType.TEXT_PLAIN)
-    public Uni<String> paged(@PathParam("page") long page, @PathParam("minLength") short minLength) {
-        if (minLength < 0 || minLength > 182 ) {
-            return Uni.createFrom().failure(new IllegalArgumentException("Min length cannot be negative or more than 182 minutes"));
+    @Produces(MediaType.APPLICATION_JSON)
+    public Uni<Response> paged(@PathParam("page") long page, @PathParam("minLength") short minLength) {
+        if (minLength < 0 || minLength > 182) {
+            return Uni.createFrom().failure(new IllegalArgumentException("Min length cannot be negative or more than 182 minutes"))
+                    .onItem().transform(e -> Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).build());
         }
-        return filmService.getPagedFilms(page, minLength)
-                .onItem().transform(films -> films.stream()
-                        .map(f -> String.format("%s (%d min)", f.getTitle(), f.getLength()))
-                        .collect(Collectors.joining("\n")))
-                .onFailure().recoverWithItem("An error occurred while fetching paged films");
+        return getPagedFilmsUseCase.execute(Pair.of(page, minLength))
+                .onItem().transform(films -> {
+                    if (!films.isEmpty()) {
+                        return Response.ok(films).build();
+                    } else {
+                        throw new NotFoundException("No films found with the given criteria!");
+                    }
+                })
+                .onFailure().recoverWithItem(e -> Response.status(Response.Status.NOT_FOUND).entity(e.getMessage()).build());
     }
 
     // Endpoint to get films with title starting with the provided string and length greater than the provided minLength
     @GET
-    @Path("/actors/{startsWith}/{minLength}")
-    @Produces(MediaType.TEXT_PLAIN)
-    public Uni<String> actors(@PathParam("startsWith") String startsWith, @PathParam("minLength") short minLength) {
-        return filmService.getFilmsStartingWith(startsWith, minLength)
-                .onItem().transform(films -> films.stream()
-                        .map(f -> String.format("%s (%d min)", f.getTitle(), f.getLength()))
-                        .collect(Collectors.joining(", ")));
+    @Path("/filmsStartingWith/{startsWith}/{minLength}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Uni<Response> filmsStartingWith(@PathParam("startsWith") String startsWith, @PathParam("minLength") short minLength) {
+        return getFilmsStartingWith.execute(Pair.of(startsWith, minLength))
+                .onItem().transform(films -> {
+                    if (!films.isEmpty()) {
+                        return Response.ok(films).build();
+                    } else {
+                        throw new NotFoundException("No films found with the given criteria!");
+                    }
+                })
+                .onFailure().recoverWithItem(e -> Response.status(Response.Status.NOT_FOUND).entity(e.getMessage()).build());
     }
 
     // Endpoint to update the rental rate of films with length greater than the provided minLength
-
     @PUT
     @Path("/update/{minLength}/{rentalRate}")
     @Produces(MediaType.TEXT_PLAIN)
     public Uni<String> update(@PathParam("minLength") short minLength, @PathParam("rentalRate") Float rentalRate) {
-        return filmService.updateRentalRate(minLength, rentalRate)
-                .onItem().transform(updated -> updated != null ? "Update successful" : "Update failed");
+        return updateRentalRate.execute(Pair.of(minLength, rentalRate))
+                .onItem().transform(updated -> updated ? "Update successful" : "Update failed");
     }
-
 }
-
+    
 /*
  * The FilmController class defines REST endpoints for interacting with films. Each endpoint seems to be well-defined and properly annotated with JAX-RS annotations.
 Error handling and response generation are handled gracefully.

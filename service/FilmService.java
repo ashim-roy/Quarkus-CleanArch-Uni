@@ -1,3 +1,4 @@
+/*
 import io.smallrye.mutiny.Uni;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.ws.rs.NotFoundException;
@@ -38,7 +39,7 @@ public class FilmService {
     }
 }
 
-/*
+
  * They interact with the database using Panache methods effectively.
  * They use Uni to handle asynchronous operations.
  * They use Infrastructure.getDefaultExecutor() to run the database operation on a separate thread.
