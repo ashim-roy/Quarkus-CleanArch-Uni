@@ -1,7 +1,8 @@
 package org.ashimroy.app.application.usecases;
 
 import io.smallrye.mutiny.Uni;
-import org.ashimroy.app.data.entities.Film;
+//import org.ashimroy.app.application.usecases.IUpdateRentalRate;
+import org.ashimroy.app.domain.model.Film;
 import org.javatuples.Pair;
 import javax.enterprise.context.ApplicationScoped;
 import java.math.BigDecimal;
