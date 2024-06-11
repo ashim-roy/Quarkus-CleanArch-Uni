@@ -1,44 +1,5 @@
-org.ashimroy.app.domain
-    - model
-        - Actor
-        - Film
-    - repository
-        - FilmRepository
-        - PanacheFilmRepository (implements FilmRepository)
 
-org.ashimroy.app.application
-    - usecases
-        - GetFilmByIdUseCase
-            - implements -> IGetFilmById
-            - uses -> FilmRepository
-        - IGetFilmById
-        - GetFilmsStartingWithUseCase
-            - implements -> IGetFilmsStartingWith
-            - uses -> FilmRepository
-        - IGetFilmsStartingWith
-        - GetFilmsWithLengthGreaterThanUseCase
-            - implements -> IGetFilmsWithLengthGreaterThan
-            - uses -> FilmRepository
-        - IGetFilmsWithLengthGreaterThan
-        - GetPagedFilmsUseCase
-            - implements -> IGetPagedFilms
-            - uses -> FilmRepository
-        - IGetPagedFilms
-        - UpdateRentalRateUseCase
-            - implements -> IUpdateRentalRate
-            - uses -> FilmRepository
-        - IUpdateRentalRate
-
-org.ashimroy.app.adapters
-    - controllers
-        - FilmController
-            - uses -> GetFilmByIdUseCase
-            - uses -> GetFilmsStartingWithUseCase
-            - uses -> GetFilmsWithLengthGreaterThanUseCase
-            - uses -> GetPagedFilmsUseCase
-            - uses -> UpdateRentalRateUseCase
-    - gateways
-        - FilmDataSource (interface)
+![image](https://github.com/ashim-roy/Quarkus-CleanArch-Uni/assets/118077929/16b340b0-a52e-4867-93b6-7da1aed5e4ff)
 
 
 Domain Layer:
