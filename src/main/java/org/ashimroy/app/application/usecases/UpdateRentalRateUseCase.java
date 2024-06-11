@@ -1,14 +1,14 @@
-package org.ashimroy.app.usecases;
+package org.ashimroy.app.application.usecases;
 
-import org.ashimroy.app.model.Film;
 import io.smallrye.mutiny.Uni;
+import org.ashimroy.app.data.entities.Film;
 import org.javatuples.Pair;
 import javax.enterprise.context.ApplicationScoped;
 import java.math.BigDecimal;
 
 
 @ApplicationScoped
-public class UpdateRentalRate implements UseCase<Pair<Short, Float>, Uni<Boolean>> {
+public class UpdateRentalRateUseCase implements IUpdateRentalRate{
 
     @Override
     public Uni<Boolean> execute(Pair<Short, Float> input) {

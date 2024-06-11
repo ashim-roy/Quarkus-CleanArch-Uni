@@ -1,4 +1,4 @@
-package org.ashimroy.app.usecases;
+package org.ashimroy.app.application.usecases;
 /*
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.PUT;
@@ -9,19 +9,18 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 */
 
-import org.ashimroy.app.usecases.GetFilmsStartingWith;
 
 import javax.enterprise.context.ApplicationScoped;
 
+import org.ashimroy.app.domain.model.Film;
 import org.javatuples.Pair;
 import io.smallrye.mutiny.Uni;
-import org.ashimroy.app.model.Film;
 import jakarta.ws.rs.NotFoundException;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @ApplicationScoped
-public class GetFilmsStartingWith implements UseCase<Pair<String, Short>, Uni<List<Film>>> {
+public class GetFilmsStartingWithUseCase implements IGetFilmsStartingWith {
 
     @Override
     public Uni<List<Film>> execute(Pair<String, Short> input) {

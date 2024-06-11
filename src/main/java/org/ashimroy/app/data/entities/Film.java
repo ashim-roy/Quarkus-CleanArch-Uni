@@ -1,4 +1,4 @@
-package org.ashimroy.app.model;
+package org.ashimroy.app.data.entities;
 
 import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
 import jakarta.persistence.CascadeType;
@@ -12,8 +12,9 @@ import jakarta.persistence.Table;
 import java.util.Optional;
 import javax.persistence.PersistenceContext;
 import javax.persistence.EntityManager;
-import javax.persistence.Id;
-
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.List;
@@ -21,6 +22,10 @@ import java.util.List;
 @Entity
 @Table(name = "film", schema = "sakila")
 public class Film extends PanacheEntityBase {
+    
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    public Long id;
     @Column(name = "title", nullable = false)
     public String title;
 
@@ -79,8 +84,7 @@ public class Film extends PanacheEntityBase {
 }
 
 /*
- * Yes, your Film class is correctly refactored to use Quarkus Panache. Here are a few things to note:
-
+Yes, your Film class is correctly refactored to use Quarkus Panache. Here are a few things to note:
 PanacheEntity automatically provides an id field, so you no longer need to define filmId.
 
 Fields are public in Panache entities. This is a conscious design decision to simplify the code.

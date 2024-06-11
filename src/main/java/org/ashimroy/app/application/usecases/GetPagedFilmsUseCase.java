@@ -1,7 +1,8 @@
-package org.ashimroy.app.usecases;
+package org.ashimroy.app.application.usecases;
 
-import org.ashimroy.app.model.Film;
 import io.smallrye.mutiny.Uni;
+
+import org.ashimroy.app.domain.model.Film;
 import org.javatuples.Pair;
 //import javax.enterprise.context.ApplicationScoped;
 import jakarta.ws.rs.NotFoundException;
@@ -16,7 +17,7 @@ import javax.enterprise.context.ApplicationScoped;
 
 
 @ApplicationScoped
-public class GetPagedFilmsUseCase implements UseCase<Pair<Long, Short>, Uni<List<Film>>> {
+public class GetPagedFilmsUseCase implements IGetPagedFilms {
 
     @Override
     public Uni<List<Film>> execute(Pair<Long, Short> input) {

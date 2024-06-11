@@ -1,14 +1,14 @@
 import io.quarkus.test.junit.QuarkusTest;
 import jakarta.inject.Inject;
+import io.smallrye.mutiny.Uni;
 
-import org.ashimroy.app.model.Film;
-import org.ashimroy.app.repository.FilmRepository;
+import org.ashimroy.app.domain.model.Film;
+import org.ashimroy.app.domain.repository.FilmRepository;
 import org.junit.jupiter.api.Test;
-
-import java.util.Optional;
-
+//import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+//import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @QuarkusTest
 public class FilmRepositoryTest {
@@ -18,9 +18,9 @@ public class FilmRepositoryTest {
     
     @Test
     public void test() {
-        Optional<Film> film = filmRepository.getFilm((short) 5);
-        assertTrue(film.isPresent());
-        assertEquals("AFRICAN EGG", film.get().getTitle());
+        Uni<Film> filmUni = filmRepository.getFilmById((short) 5); 
+        Film film = filmUni.await().indefinitely();
+        assertNotNull(film);
+        assertEquals("AFRICAN EGG", film.getTitle());
     }
-    
 }

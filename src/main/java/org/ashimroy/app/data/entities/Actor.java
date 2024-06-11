@@ -1,4 +1,4 @@
-package org.ashimroy.app.model;
+package org.ashimroy.app.data.entities;
 
 import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
 import jakarta.persistence.Column;

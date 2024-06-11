@@ -1,20 +1,15 @@
-package org.ashimroy.app.usecases;
+package org.ashimroy.app.application.usecases;
 
-import org.ashimroy.app.model.Film;
 import io.smallrye.mutiny.Uni;
 import javax.enterprise.context.ApplicationScoped;
 import javax.ws.rs.NotFoundException;
+
+import org.ashimroy.app.domain.model.Film;
+
 import java.util.List;
-/*
-import org.javatuples.Pair;
-import java.time.Duration;
-import java.util.ArrayList;
-import io.quarkus.panache.common.Page;
-import io.quarkus.panache.common.Sort;
-*/
 
 @ApplicationScoped
-public class GetFilmsWithLengthGreaterThan implements UseCase<Short, Uni<List<Film>>> {
+public class GetFilmsWithLengthGreaterThanUseCase implements IGetFilmsWithLengthGreaterThan {
 
     @Override
     public Uni<List<Film>> execute(Short input) {

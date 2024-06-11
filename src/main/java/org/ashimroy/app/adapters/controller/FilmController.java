@@ -1,4 +1,4 @@
-package org.ashimroy.app.controller;
+package org.ashimroy.app.adapters.controller;
 
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.PUT;
@@ -7,13 +7,13 @@ import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import javax.ws.rs.NotFoundException;
 
-import org.ashimroy.app.usecases.GetFilmByIdUseCase;
-import org.ashimroy.app.usecases.GetFilmsStartingWith;
-import org.ashimroy.app.usecases.GetFilmsWithLengthGreaterThan;
-import org.ashimroy.app.usecases.GetPagedFilmsUseCase;
-import org.ashimroy.app.usecases.UpdateRentalRate;
-
+import org.ashimroy.app.application.usecases.IGetFilmById;
+import org.ashimroy.app.application.usecases.IGetFilmsStartingWith;
+import org.ashimroy.app.application.usecases.IGetFilmsWithLengthGreaterThan;
+import org.ashimroy.app.application.usecases.IGetPagedFilms;
+import org.ashimroy.app.application.usecases.IUpdateRentalRate;
 import org.javatuples.Pair;
 import io.smallrye.mutiny.Uni;
 import javax.inject.Inject;
@@ -22,19 +22,19 @@ import javax.inject.Inject;
 public class FilmController {
 
     @Inject
-    GetFilmByIdUseCase getFilmByIdUseCase;
+    IGetFilmById getFilmByIdUseCase;
 
     @Inject
-    GetFilmsStartingWith getFilmsStartingWith;
+    IGetFilmsStartingWith getFilmsStartingWith;
 
     @Inject
-    GetFilmsWithLengthGreaterThan getFilmsWithLengthGreaterThan;
+    IGetFilmsWithLengthGreaterThan getFilmsWithLengthGreaterThan;
 
     @Inject
-    GetPagedFilmsUseCase getPagedFilmsUseCase;
+    IGetPagedFilms getPagedFilmsUseCase;
 
     @Inject
-    UpdateRentalRate updateRentalRate;
+    IUpdateRentalRate updateRentalRate;
 
     // Endpoint to test the service
     @GET
@@ -67,9 +67,9 @@ public class FilmController {
     public Uni<Response> paged(@PathParam("page") long page, @PathParam("minLength") short minLength) {
         if (minLength < 0 || minLength > 182) {
             return Uni.createFrom().failure(new IllegalArgumentException("Min length cannot be negative or more than 182 minutes"))
-                    .onItem().transform(e -> Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).build());
+                    .onItem().transform(e -> Response.status(Response.Status.BAD_REQUEST).entity(((Throwable)e).getMessage()).build());
         }
-        return getPagedFilmsUseCase.execute(Pair.of(page, minLength))
+        return getPagedFilmsUseCase.execute(new Pair<>(page, minLength))
                 .onItem().transform(films -> {
                     if (!films.isEmpty()) {
                         return Response.ok(films).build();
@@ -77,7 +77,7 @@ public class FilmController {
                         throw new NotFoundException("No films found with the given criteria!");
                     }
                 })
-                .onFailure().recoverWithItem(e -> Response.status(Response.Status.NOT_FOUND).entity(e.getMessage()).build());
+                .onFailure().recoverWithItem(e -> Response.status(Response.Status.NOT_FOUND).entity(((Throwable)e).getMessage()).build());
     }
 
     // Endpoint to get films with title starting with the provided string and length greater than the provided minLength
@@ -85,7 +85,7 @@ public class FilmController {
     @Path("/filmsStartingWith/{startsWith}/{minLength}")
     @Produces(MediaType.APPLICATION_JSON)
     public Uni<Response> filmsStartingWith(@PathParam("startsWith") String startsWith, @PathParam("minLength") short minLength) {
-        return getFilmsStartingWith.execute(Pair.of(startsWith, minLength))
+        return getFilmsStartingWith.execute(new Pair<>(startsWith, minLength))
                 .onItem().transform(films -> {
                     if (!films.isEmpty()) {
                         return Response.ok(films).build();
@@ -101,7 +101,7 @@ public class FilmController {
     @Path("/update/{minLength}/{rentalRate}")
     @Produces(MediaType.TEXT_PLAIN)
     public Uni<String> update(@PathParam("minLength") short minLength, @PathParam("rentalRate") Float rentalRate) {
-        return updateRentalRate.execute(Pair.of(minLength, rentalRate))
+        return updateRentalRate.execute(new Pair<>(minLength, rentalRate))
                 .onItem().transform(updated -> updated ? "Update successful" : "Update failed");
     }
 }
