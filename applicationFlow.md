@@ -109,13 +109,15 @@ Built-in Error Handling: Uni comes with built-in mechanisms for handling errors,
 
 Improved User Experience:/ Reduced Latency: Non-blocking operations can lead to reduced latency in processing requests, thereby improving the overall user experience.
 
-Explanation
+Explanation: 
 Reactive Data Source: The PanacheFilmDataSource provides a reactive stream of films using Multi.createFrom().iterable(). This converts the list of films into a reactive stream.
 Use Case: The GetFilmsWithLengthGreaterThanUseCase processes each film asynchronously and can handle errors gracefully. It uses Multi to manage multiple items in the stream.
 Controller: The FilmController exposes an endpoint to the client, which returns a Multi<Film> stream to the client.
 
 In this setup, the client application can control the flow of data using back pressure. For instance, if the client processes films at a slower rate than they are retrieved from the database, Multi will manage this by signaling to slow down the data retrieval, thus avoiding overwhelming the client.
-Summary
+
+
+Summary: 
 Reactive Streams: Enable handling streams of data with non-blocking back pressure.
 Back Pressure: Ensures downstream components are not overwhelmed by upstream data flow.
 Use Case: Streaming films from a database to a client with processing capabilities.
@@ -129,6 +131,8 @@ Controller Layer: The FilmController receives the request and delegates the call
 Use Case Layer: The use case (e.g., GetFilmByIdUseCase) handles the business logic and interacts with the FilmRepository to fetch or modify data.
 Repository Layer: The PanacheFilmRepository implements the data access methods and interacts with the database to fetch or update film data.
 Domain Layer: The domain models (e.g., Film, Actor) represent the entities managed by the repository and manipulated by the use cases.
+
+
 Example Use Case Flow
 
 Get Film by ID
