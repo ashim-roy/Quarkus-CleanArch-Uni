@@ -1,15 +1,20 @@
 package org.ashimroy.app.application.usecases;
 
 import io.smallrye.mutiny.Uni;
-//import org.ashimroy.app.application.usecases.IUpdateRentalRate;
-import org.ashimroy.app.domain.model.Film;
 import org.javatuples.Pair;
 import javax.enterprise.context.ApplicationScoped;
-import java.math.BigDecimal;
-
+import javax.inject.Inject;
+import org.ashimroy.app.domain.repository.FilmRepository;
 
 @ApplicationScoped
-public class UpdateRentalRateUseCase implements IUpdateRentalRate{
+public class UpdateRentalRateUseCase implements IUpdateRentalRate {
+
+    private final FilmRepository filmRepository;
+
+    @Inject
+    public UpdateRentalRateUseCase(FilmRepository filmRepository) {
+        this.filmRepository = filmRepository;
+    }
 
     @Override
     public Uni<Boolean> execute(Pair<Short, Float> input) {
@@ -17,9 +22,14 @@ public class UpdateRentalRateUseCase implements IUpdateRentalRate{
             return Uni.createFrom().failure(new IllegalArgumentException("Film length and rental rate must be positive"));
         }
 
-        return Uni.createFrom().item(() -> 
-                Film.update("rental_rate = ?1 where length > ?2", BigDecimal.valueOf(input.getValue1()), input.getValue0()))
-                .onItem().transform(updated -> updated > 0)
-                .onFailure().recoverWithItem(false);
+        return filmRepository.updateRentalRateForFilmsWithLengthGreaterThan(input.getValue0(), input.getValue1())
+            .onItem().transform(updated -> updated > 0);
     }
 }
+
+/*
+ * Used In: update method
+Endpoint: /update/{minLength}/{rentalRate}
+Description: This use case is executed when the /update/{minLength}/{rentalRate} endpoint is called. 
+It updates the rental rate of films with a length greater than the specified minimum length.
+ */

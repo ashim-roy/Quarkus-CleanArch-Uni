@@ -24,5 +24,5 @@ services:
       QUARKUS_DATASOURCE_USERNAME: sakila
       QUARKUS_DATASOURCE_PASSWORD: p_ssW0rd
     ports:
-      - 8081:8080
+      - 8080:8080
     command: ["java", "-jar", "/app/quarkus-app/quarkus-run.jar"]

@@ -19,22 +19,22 @@ import io.smallrye.mutiny.Uni;
 import javax.inject.Inject;
 
 @Path("/")
-public class FilmController {
+public class FilmController { // controller is inside Adapter Layer calling the UseCases/Interactors in APplictaion Layer
 
     @Inject
     IGetFilmById getFilmByIdUseCase;
 
     @Inject
-    IGetFilmsStartingWith getFilmsStartingWith;
+    IGetFilmsStartingWith getFilmsStartingWithUseCase;
 
     @Inject
-    IGetFilmsWithLengthGreaterThan getFilmsWithLengthGreaterThan;
+    IGetFilmsWithLengthGreaterThan getFilmsWithLengthGreaterThanUseCase;
 
     @Inject
     IGetPagedFilms getPagedFilmsUseCase;
 
     @Inject
-    IUpdateRentalRate updateRentalRate;
+    IUpdateRentalRate updateRentalRateUseCase;
 
     // Endpoint to test the service
     @GET
@@ -44,76 +44,51 @@ public class FilmController {
         return "Hello Ashim!";
     }
 
-    // Endpoint to get a film by its ID
     @GET
     @Path("/film/{filmId}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Uni<Response> getFilm(@PathParam("filmId") short filmId) {
+    public Uni<Response> getFilm(@PathParam("filmId") Long filmId) {
         return getFilmByIdUseCase.execute(filmId)
-                .onItem().transform(film -> {
-                    if (film != null) {
-                        return Response.ok(film).build();
-                    } else {
-                        throw new NotFoundException("No film was found!");
-                    }
-                })
-                .onFailure().recoverWithItem(e -> Response.status(Response.Status.NOT_FOUND).entity(e.getMessage()).build());
+                .map(film -> Response.ok(film).build())
+                .onFailure(NotFoundException.class)
+                .recoverWithItem(Response.status(Response.Status.NOT_FOUND).build());
     }
 
-    // Endpoint to get a page of films with length greater than the provided minLength
-    @GET
-    @Path("/pagedFilms/{page}/{minLength}")
-    @Produces(MediaType.APPLICATION_JSON)
-    public Uni<Response> paged(@PathParam("page") long page, @PathParam("minLength") short minLength) {
-        if (minLength < 0 || minLength > 182) {
-            return Uni.createFrom().failure(new IllegalArgumentException("Min length cannot be negative or more than 182 minutes"))
-                    .onItem().transform(e -> Response.status(Response.Status.BAD_REQUEST).entity(((Throwable)e).getMessage()).build());
-        }
-        return getPagedFilmsUseCase.execute(new Pair<>(page, minLength))
-                .onItem().transform(films -> {
-                    if (!films.isEmpty()) {
-                        return Response.ok(films).build();
-                    } else {
-                        throw new NotFoundException("No films found with the given criteria!");
-                    }
-                })
-                .onFailure().recoverWithItem(e -> Response.status(Response.Status.NOT_FOUND).entity(((Throwable)e).getMessage()).build());
-    }
-
-    // Endpoint to get films with title starting with the provided string and length greater than the provided minLength
     @GET
     @Path("/filmsStartingWith/{startsWith}/{minLength}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Uni<Response> filmsStartingWith(@PathParam("startsWith") String startsWith, @PathParam("minLength") short minLength) {
-        return getFilmsStartingWith.execute(new Pair<>(startsWith, minLength))
-                .onItem().transform(films -> {
-                    if (!films.isEmpty()) {
-                        return Response.ok(films).build();
-                    } else {
-                        throw new NotFoundException("No films found with the given criteria!");
-                    }
-                })
-                .onFailure().recoverWithItem(e -> Response.status(Response.Status.NOT_FOUND).entity(e.getMessage()).build());
+    public Uni<Response> getFilmsStartingWith(@PathParam("startsWith") String startsWith, @PathParam("minLength") Short minLength) {
+        return getFilmsStartingWithUseCase.execute(new Pair<>(startsWith, minLength))
+                .map(films -> Response.ok(films).build())
+                .onFailure(NotFoundException.class)
+                .recoverWithItem(Response.status(Response.Status.NOT_FOUND).build());
     }
 
-    // Endpoint to update the rental rate of films with length greater than the provided minLength
+    @GET
+    @Path("/filmsWithLengthGreaterThan/{minLength}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Uni<Response> getFilmsWithLengthGreaterThan(@PathParam("minLength") Short minLength) {
+        return getFilmsWithLengthGreaterThanUseCase.execute(minLength)
+                .map(films -> Response.ok(films).build())
+                .onFailure(NotFoundException.class)
+                .recoverWithItem(Response.status(Response.Status.NOT_FOUND).build());
+    }
+
+    @GET
+    @Path("/pagedFilms/{page}/{pageSize}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Uni<Response> getPagedFilms(@PathParam("page") Integer page, @PathParam("pageSize") Integer pageSize) {
+        return getPagedFilmsUseCase.execute(new Pair<>(page, pageSize))
+                .map(films -> Response.ok(films).build())
+                .onFailure(NotFoundException.class)
+                .recoverWithItem(Response.status(Response.Status.NOT_FOUND).build());
+    }
+
     @PUT
-    @Path("/update/{minLength}/{rentalRate}")
-    @Produces(MediaType.TEXT_PLAIN)
-    public Uni<String> update(@PathParam("minLength") short minLength, @PathParam("rentalRate") Float rentalRate) {
-        return updateRentalRate.execute(new Pair<>(minLength, rentalRate))
-                .onItem().transform(updated -> updated ? "Update successful" : "Update failed");
+    @Path("/updateRentalRate/{minLength}/{rentalRate}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Uni<Response> updateRentalRate(@PathParam("minLength") Short minLength, @PathParam("rentalRate") Float rentalRate) {
+        return updateRentalRateUseCase.execute(new Pair<>(minLength, rentalRate))
+                .map(success -> success ? Response.ok("Update successful").build() : Response.status(Response.Status.BAD_REQUEST).build());
     }
 }
-    
-/*
- * The FilmController class defines REST endpoints for interacting with films. Each endpoint seems to be well-defined and properly annotated with JAX-RS annotations.
-Error handling and response generation are handled gracefully.
-The usage of Uni in the controller methods ensures non-blocking behavior, which is suitable for reactive applications.
-The controller methods interact with the FilmService class to perform business logic and database operations.
-The controller methods transform the results of database operations into appropriate response formats.
-The controller methods use the @PathParam annotation to extract values from the request URI.
-The controller methods use the @Produces annotation to specify the media type of the response.
-The controller methods use the @GET and @PUT annotations to define the HTTP methods for handling requests.
-
- */

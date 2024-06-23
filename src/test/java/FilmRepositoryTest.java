@@ -2,7 +2,7 @@ import io.quarkus.test.junit.QuarkusTest;
 import jakarta.inject.Inject;
 import io.smallrye.mutiny.Uni;
 
-import org.ashimroy.app.domain.model.Film;
+import org.ashimroy.app.domain.entity.Film;
 import org.ashimroy.app.domain.repository.FilmRepository;
 import org.junit.jupiter.api.Test;
 //import java.util.Optional;

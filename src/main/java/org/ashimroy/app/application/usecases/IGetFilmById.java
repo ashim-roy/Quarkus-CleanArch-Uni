@@ -1,8 +1,8 @@
 package org.ashimroy.app.application.usecases;
-import org.ashimroy.app.domain.model.Film;
+import org.ashimroy.app.domain.entity.Film;
 
 import io.smallrye.mutiny.Uni;
 
 public interface IGetFilmById {
-    Uni<Film> execute(Short filmId);
+    Uni<Film> execute(Long filmId);
 }

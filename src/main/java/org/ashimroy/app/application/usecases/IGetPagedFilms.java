@@ -1,9 +1,10 @@
 package org.ashimroy.app.application.usecases;
 
 import io.smallrye.mutiny.Uni;
-
-import org.ashimroy.app.domain.model.Film;
-import org.javatuples.Pair;
 import java.util.List;
+import org.ashimroy.app.domain.entity.Film;
+import org.javatuples.Pair;
 
-public interface IGetPagedFilms extends UseCase<Pair<Long, Short>, Uni<List<Film>>> {}
+public interface IGetPagedFilms {
+    Uni<List<Film>> execute(Pair<Integer, Integer> input);
+}

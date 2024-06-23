@@ -19,6 +19,7 @@ Controller (FilmController): Provides endpoints to interact with the film databa
 /pagedFilms/{page}/{minLength}: Fetches a paginated list of films with a length greater than a specified minimum.
 /actors/{startsWith}/{minLength}: Fetches films with titles starting with a specified string and a length greater than a specified minimum.
 /update/{minLength}/{rentalRate}: Updates the rental rate for films with a length greater than a specified minimum.
+
 Repository (FilmRepository): Interacts with the database using JPAStreamer.
 getFilm(short filmId): Retrieves a film by its ID.
 getFilms(short minLength): Retrieves films with a length greater than the specified minimum.

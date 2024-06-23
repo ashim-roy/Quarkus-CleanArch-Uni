@@ -1,24 +1,23 @@
 package org.ashimroy.app.application.usecases;
 
-import org.ashimroy.app.adapters.gateways.FilmDataSource;
-import org.ashimroy.app.domain.model.Film;
-
 import io.smallrye.mutiny.Uni;
+import org.ashimroy.app.domain.entity.Film;
+import org.ashimroy.app.domain.repository.FilmRepository;
+
 import javax.enterprise.context.ApplicationScoped;
-import javax.ws.rs.NotFoundException;
 import javax.inject.Inject;
 
-
 @ApplicationScoped
-public class GetFilmByIdUseCase implements IGetFilmById{
+public class GetFilmByIdUseCase implements IGetFilmById {
 
     @Inject
-    FilmDataSource filmDataSource;
+    FilmRepository filmRepository;
 
     @Override
-    public Uni<Film> execute(Short filmId) {
-        return filmDataSource.getFilmById(filmId)
-                .onItem().ifNull().failWith(() -> new NotFoundException("Film not found"));
+    public Uni<Film> execute(Long filmId) {
+        return filmRepository.findFilmById(filmId);
     }
 }
- 
+
+    // if you have separated your domain model (Film) from your persistence model (FilmEntity), this kind of conversion 
+    // could be necessary when you fetch data from the database and want to convert it into your domain model.
